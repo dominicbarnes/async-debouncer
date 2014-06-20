@@ -1,0 +1,25 @@
+{
+  "name": "async-debouncer",
+  "repository": "dominicbarnes/async-debouncer",
+  "version": "0.0.0",
+  "description": "Manage asynchronous calls, where only the most recent is relevant and all others are cancelled",
+  "keywords": [
+    "async",
+    "debounce",
+    "search",
+    "manage"
+  ],
+  "dependencies": {
+    "component/debounce": "~0.0.3",
+    "component/emitter": "^1.1.3"
+  },
+  "development": {
+    "dependencies": {
+      "chrissrogers/noop": "*",
+      "component/assert": "*"
+    }
+  },
+  "scripts": [
+    "index.js"
+  ]
+}
