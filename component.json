@@ -1,7 +1,7 @@
 {
   "name": "async-debouncer",
   "repository": "dominicbarnes/async-debouncer",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Manage asynchronous calls, where only the most recent is relevant and all others are cancelled",
   "keywords": [
     "async",
