@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <form id="form">
+            <input id="input" type="search" name="q" placeholder="enter search terms...">
+            <button type="submit">Search</button>
+        </form>
+        <script src="build/build.js"></script>
+        <script>
+            var AsyncDebouncer = require("async-debouncer");
+            var form = document.getElementById("form");
+            var input = document.getElementById("input");
+            var events = require("event");
+
+            var search = new AsyncDebouncer({
+                start: function (terms, done) {
+                    return setTimeout(function () {
+                        done(null, terms);
+                    }, 2500);
+                },
+                cancel: function (id) {
+                    clearTimeout(id);
+                },
+                rate: 100
+            });
+
+            search.on("run", function (args) {
+                console.log("Attempting search for", args[0]);
+            });
+
+            search.on("cancel", function (id) {
+                console.warn("Cancelling previous search", id);
+            });
+
+            search.on("success", function (results) {
+                console.info("Successful search for:", results);
+            });
+
+            events.bind(form, "submit", doSearch);
+            events.bind(input, "keyup", doSearch);
+            events.bind(input, "change", doSearch);
+
+            function doSearch(e) {
+                if (e.type === "submit") e.preventDefault();
+                search.run(input.value);
+            }
+        </script>
+    </body>
+</html>
