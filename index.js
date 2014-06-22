@@ -1,6 +1,7 @@
 // dependencies
 var debounce = require("debounce");
 var Emitter = require("emitter");
+var debug = require("debug")("async-debouncer");
 
 
 // single export
@@ -38,6 +39,7 @@ function AsyncDebouncer(options) {
     if (options) {
         if (options.start) {
             if (options.rate) {
+                debug("using a debounced function at rate", options.rate);
                 this._start = debounce(options.start, options.rate);
             } else {
                 this._start = options.start;
@@ -54,12 +56,14 @@ function AsyncDebouncer(options) {
  * Calls the user-supplied start function with the supplied arguments
  */
 AsyncDebouncer.prototype.run = function () {
+    debug("run", "arguments", arguments);
     var self = this;
 
     this.cancel(); // cancel any previous calls
 
     var args = [].slice.call(arguments);
     args.push(function (err, results) {
+        debug("run", "complete");
         delete self.inFlight;
 
         if (err) {
@@ -71,14 +75,18 @@ AsyncDebouncer.prototype.run = function () {
 
     this.emit("run", args);
     this.inFlight = this._start.apply(null, args);
+    debug("run", "now in flight", this.inFlight);
 };
 
 /**
  * Cancels the currently outstanding in-flight action, if there is one
  */
 AsyncDebouncer.prototype.cancel = function () {
+    debug("cancel");
     if (this.inFlight) {
         this.emit("cancel", this.inFlight);
         this._cancel(this.inFlight);
+    } else {
+        debug("cancel", "nothing in flight");
     }
 };

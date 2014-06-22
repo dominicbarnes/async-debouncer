@@ -142,6 +142,37 @@ describe("AsyncDebouncer#run(...args)", function () {
 
         inst.run();
     });
+
+    it("should work with the rate config", function (done) {
+        var inst = new AsyncDebouncer({
+            start: function (done) {
+                return setTimeout(function () {
+                    done(null, "hello world");
+                }, 1);
+            },
+            cancel: function (id) {
+                assert(id);
+                return clearTimeout(id);
+            },
+            rate: 100
+        });
+
+        inst.on("success", function (result) {
+            assert(result === "hello world");
+            done();
+        });
+
+        inst.run();
+        setTimeout(function () {
+            inst.run();
+        }, 10);
+        setTimeout(function () {
+            inst.run();
+        }, 20);
+        setTimeout(function () {
+            inst.run();
+        }, 30);
+    });
 });
 
 describe("AsyncDebouncer#cancel()", function () {
